@@ -113,8 +113,8 @@ class ImageBarView(ctx:Context, var bitmap:Bitmap, var n:Int = 10):View(ctx) {
                 imageBar?.update {
                     animator.stop()
                     when(it) {
-                        0f -> view.imageBarListener?.onImageCreated?.invoke()
-                        1f -> view.imageBarListener?.onImageDestroyed?.invoke()
+                        1f -> view.imageBarListener?.onImageCreated?.invoke()
+                        0f -> view.imageBarListener?.onImageDestroyed?.invoke()
                     }
                 }
             }
