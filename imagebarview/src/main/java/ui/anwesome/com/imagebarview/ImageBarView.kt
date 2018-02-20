@@ -10,12 +10,15 @@ import android.graphics.*
 
 class ImageBarView(ctx:Context, var bitmap:Bitmap, var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val renderer = Renderer(this)
     override fun onDraw(canvas:Canvas) {
-
+        renderer.render(canvas, paint)
     }
     override fun onTouchEvent(event:MotionEvent):Boolean {
-        when(event.action == MotionEvent.ACTION_DOWN) {
-
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                renderer.handleTap()
+            }
         }
         return true
     }
