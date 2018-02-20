@@ -7,7 +7,7 @@ import android.content.*
 import android.view.*
 import android.graphics.*
 
-class ImageBarView(ctx:Context, var bitmap:Bitmap):View(ctx) {
+class ImageBarView(ctx:Context, var bitmap:Bitmap, var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     override fun onDraw(canvas:Canvas) {
 
@@ -58,6 +58,32 @@ class ImageBarView(ctx:Context, var bitmap:Bitmap):View(ctx) {
             if(animated) {
                 animated = false
             }
+        }
+    }
+    data class ImageBar(var bitmap:Bitmap, var w:Float, var h:Float, var n:Int) {
+        val state = ImageBarState()
+        fun draw(canvas:Canvas, paint:Paint) {
+            val bw = bitmap.width
+            val bh = bitmap.height
+            val y_gap = bh/n
+            var y = 0f
+            for(i in 1..n) {
+                canvas.save()
+                val ox = -bw/2 + (w + bw)*((i+1)%2)
+                canvas.translate(ox + (w/2 - ox) * state.scale, y + bh/2)
+                val path = Path()
+                path.addRect(RectF(-bw/2f, -bh/2f, bw/2f, bh/2f), Path.Direction.CW)
+                canvas.clipPath(path)
+                canvas.drawBitmap(bitmap, -bw/2f, -bh/2f, paint)
+                canvas.restore()
+                y += y_gap
+            }
+        }
+        fun update(stopcb: (Float) -> Unit) {
+            state.update(stopcb)
+        }
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
         }
     }
 }
