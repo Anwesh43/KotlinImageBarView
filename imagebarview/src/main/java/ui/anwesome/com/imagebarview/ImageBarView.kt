@@ -69,16 +69,16 @@ class ImageBarView(ctx:Context, var bitmap:Bitmap, var n:Int = 10):View(ctx) {
         fun draw(canvas:Canvas, paint:Paint) {
             val bw = bitmap.width
             val bh = bitmap.height
-            val y_gap = bh/n
+            val y_gap = bh.toFloat()/n
             var y = 0f
             for(i in 1..n) {
                 canvas.save()
                 val ox = -bw/2 + (w + bw)*((i+1)%2)
-                canvas.translate(ox + (w/2 - ox) * state.scale, y + bh/2)
+                canvas.translate(ox + (w/2 - ox) * state.scale, h/2 - bh.toFloat()/2)
                 val path = Path()
-                path.addRect(RectF(-bw/2f, -bh/2f, bw/2f, bh/2f), Path.Direction.CW)
+                path.addRect(RectF(-bw/2f, y - y_gap/2, bw/2f, y + y_gap/2), Path.Direction.CW)
                 canvas.clipPath(path)
-                canvas.drawBitmap(bitmap, -bw/2f, -bh/2f, paint)
+                canvas.drawBitmap(bitmap, -bw/2f, 0f, paint)
                 canvas.restore()
                 y += y_gap
             }
