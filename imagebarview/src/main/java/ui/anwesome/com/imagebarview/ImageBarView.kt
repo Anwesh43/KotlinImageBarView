@@ -11,6 +11,10 @@ import android.graphics.*
 class ImageBarView(ctx:Context, var bitmap:Bitmap, var n:Int = 10):View(ctx) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val renderer = Renderer(this)
+    var imageBarListener : ImageBarListener ?= null
+    fun addImageBarListener(onImageCreated: () -> Unit, onImageDestroyed: () -> Unit) {
+        imageBarListener = ImageBarListener(onImageCreated, onImageDestroyed)
+    }
     override fun onDraw(canvas:Canvas) {
         renderer.render(canvas, paint)
     }
@@ -108,6 +112,10 @@ class ImageBarView(ctx:Context, var bitmap:Bitmap, var n:Int = 10):View(ctx) {
             animator.animate {
                 imageBar?.update {
                     animator.stop()
+                    when(it) {
+                        0f -> view.imageBarListener?.onImageCreated?.invoke()
+                        1f -> view.imageBarListener?.onImageDestroyed?.invoke()
+                    }
                 }
             }
         }
@@ -124,4 +132,5 @@ class ImageBarView(ctx:Context, var bitmap:Bitmap, var n:Int = 10):View(ctx) {
             return view
         }
     }
+    data class ImageBarListener(var onImageCreated: () -> Unit, var onImageDestroyed: () -> Unit)
 }
