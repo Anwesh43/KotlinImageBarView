@@ -86,4 +86,31 @@ class ImageBarView(ctx:Context, var bitmap:Bitmap, var n:Int = 10):View(ctx) {
             state.startUpdating(startcb)
         }
     }
+    data class Renderer(var view:ImageBarView, var time:Int = 0) {
+        val animator = Animator(view)
+        var imageBar:ImageBar ?= null
+        fun render(canvas:Canvas, paint:Paint) {
+            if(time == 0) {
+                val w = canvas.width
+                val h = canvas.height
+                var bitmap:Bitmap = Bitmap.createScaledBitmap(view.bitmap, w/2, h/2, true)
+                if(view.n > 2) {
+                    imageBar = ImageBar(bitmap, w.toFloat(), h.toFloat(), view.n)
+                }
+            }
+            canvas.drawColor(Color.parseColor("#212121"))
+            imageBar?.draw(canvas, paint)
+            time++
+            animator.animate {
+                imageBar?.update {
+                    animator.stop()
+                }
+            }
+        }
+        fun handleTap() {
+            imageBar?.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
