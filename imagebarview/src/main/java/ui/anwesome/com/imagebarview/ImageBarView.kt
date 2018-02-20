@@ -3,6 +3,7 @@ package ui.anwesome.com.imagebarview
 /**
  * Created by anweshmishra on 20/02/18.
  */
+import android.app.Activity
 import android.content.*
 import android.view.*
 import android.graphics.*
@@ -111,6 +112,13 @@ class ImageBarView(ctx:Context, var bitmap:Bitmap, var n:Int = 10):View(ctx) {
             imageBar?.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity: Activity, bitmap: Bitmap):ImageBarView {
+            val view = ImageBarView(activity, bitmap)
+            activity.setContentView(view)
+            return view
         }
     }
 }
